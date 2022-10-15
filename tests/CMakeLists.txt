@@ -1,5 +1,5 @@
 ###############################################################################
-### UNIT TEST
+### UNIT TEST FRAMWEWORK
 ###############################################################################
 
 # Keep test files in a separate source directory called unit_test
