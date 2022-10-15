@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.23.2)
 
 # Project name and language
 project(ORCA LANGUAGES CXX)
+include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
 
 # We default to Release build type if option -D CMAKE_BUILD_TYPE not provided
 if(NOT CMAKE_BUILD_TYPE)
@@ -25,7 +26,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Tell find_package() to first search using Config mode before falling back to Module mode (for conan)
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
 
-find_package(Boost 1.71 REQUIRED COMPONENTS program_options unit_test_framework)
+find_package(Boost REQUIRED COMPONENTS program_options unit_test_framework)
 
 enable_testing()
 
