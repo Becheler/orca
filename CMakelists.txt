@@ -1,0 +1,32 @@
+# CMake version has to be newer than the Boost version: see https://stackoverflow.com/a/43885372/10360134
+# BE SUPER CAREFUL IF YOU CHANGE ANY VERSION ~ Captain SpOCK, 45th August 3045
+cmake_minimum_required(VERSION 3.23.2)
+
+# Project name and language
+project(ORCA LANGUAGES CXX)
+
+# We default to Release build type if option -D CMAKE_BUILD_TYPE not provided
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+endif()
+
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+message(STATUS "C++ flags, Debug configuration: ${CMAKE_CXX_FLAGS_DEBUG}")
+message(STATUS "C++ flags, Release configuration: ${CMAKE_CXX_FLAGS_RELEASE}")
+message(STATUS "C++ flags, Release configuration with Debug info: ${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
+message(STATUS "C++ flags, minimal Release configuration: ${CMAKE_CXX_FLAGS_MINSIZEREL}")
+
+# Use modern C++ with support for concepts and mp-units
+set(CMAKE_CXX_STANDARD 20)
+# Prevent use of non-portable compiler extensions
+set(CMAKE_CXX_EXTENSIONS OFF)
+# This makes C++20 a requirement and prevents a "decay" to C++98 when the compiler does not support C++20.
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# Tell find_package() to first search using Config mode before falling back to Module mode (for conan)
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
+
+find_package(Boost 1.71 REQUIRED COMPONENTS program_options unit_test_framework)
+
+enable_testing()
+
+add_subdirectory(tests)
