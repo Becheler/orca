@@ -316,7 +316,7 @@ private:
   using common2_type = std::unordered_map<key_pair, int, key_pair::hash>;
   using common3_type = std::unordered_map<key_triple, int, key_triple::hash>;
   using strategy_type = Strategy;
-  using big_int = strategy_type::big_int;
+  using big_int = typename strategy_type::big_int;
   // number of nodes
   int _n;
   // number of edges

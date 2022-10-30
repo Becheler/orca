@@ -11,13 +11,19 @@ foreach(testSrc ${TEST_SRCS})
         get_filename_component(testName ${testSrc} NAME_WE)
 
         # Add compile target
-        add_executable(${testName} ${testSrc} ${version_file})
+        add_executable(${testName} ${testSrc})
 
         # Link to Boost libraries AND your targets and dependencies
         target_link_libraries(${testName} ${Boost_LIBRARIES})
 
         target_include_directories(${testName} PRIVATE ${Boost_INCLUDE_DIRS})
 
+        # Specifies include directories to use when compiling the target
+        target_include_directories(
+          ${testName} PRIVATE
+          $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+          $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
+          
         #Finally add it to test execution. Notice the WORKING_DIRECTORY and COMMAND
         add_test(NAME ${testName}
                  WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
