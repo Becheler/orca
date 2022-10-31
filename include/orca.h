@@ -945,8 +945,13 @@ public:
           for (int na2 = na1 + 1; na2 < _deg.at(a); na2++)
           {
             int c = _inc.at(a).at(na2).first;
+            auto answer = _policy.are_adjacent(x, c) ? "true" : "false";
+            std::cout << "check " << answer << std::endl;
             if (c == x || _policy.are_adjacent(x, c) || _policy.are_adjacent(b, c)) continue;
+            std::cout << "nodes " << x << " " << a << " " << b << " " << c << std::endl;
+            std::cout << "node " << x << " orbit 7 " << _orbits.at(x).at(6) << std::endl;
             _orbits.at(x).at(6)++;
+            std::cout << "node " << x << " orbit 7 " << _orbits.at(x).at(6) << std::endl;
             std::cout << f_22 << " " << a << " " << _deg.at(a) << std::endl;
             f_22 += _deg.at(a) - 3;
             f_20 += _deg.at(x) - 1;
@@ -963,9 +968,14 @@ public:
           {
             int c = _inc.at(x).at(nx3).first;
             if (_policy.are_adjacent(a, c) || _policy.are_adjacent(b, c)) continue;
+            std::cout << "orbit 7 " << _orbits.at(x).at(7) << std::endl;
             _orbits.at(x).at(7)++;
+            std::cout << "orbit 7 " << _orbits.at(x).at(7) << std::endl;
+
             f_23 += _deg.at(x) - 3;
             f_21 += _deg.at(a) - 1 + _deg.at(b) - 1 + _deg.at(c) - 1;
+            std::cout << f_23 << " " << f_21 << std::endl;
+
           }
         }
       }
