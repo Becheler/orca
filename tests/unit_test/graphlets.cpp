@@ -14,7 +14,7 @@ BOOST_AUTO_TEST_CASE( dummy1 )
 
 BOOST_AUTO_TEST_CASE( dummy2 )
 {
-  read_count_write_orca("tests/data/graphs/C2.txt");
+  read_count_write_orca("data/graphs/C2.txt");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

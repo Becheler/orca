@@ -1,6 +1,7 @@
 #ifndef ORCA_H
 #define ORCA_H
 
+#include <vector>
 #include <string>
 #include <algorithm> // std::min, std::max, std::binary_search
 #include <utility> // std::min, std::max, std::binary_search
@@ -12,6 +13,8 @@
 #include <iterator> // std::advance
 #include <cassert>
 #include <set>
+#include <stdint.h>
+
 ///
 /// @brief Nested class for a hashable key for pairs of nodes
 ///
@@ -119,7 +122,7 @@ public:
 namespace adjacent_policy
 {
   // or `long long` or  `boost::multiprecision::cpp_int` (versatile) or `boost::multiprecision::cpp_int` (fast)
-  using big_int = unsigned int;
+  using big_int = int;
   ///
   /// @brief adj is a vector of vector
   ///
@@ -281,7 +284,7 @@ namespace adjacent_policy
     void sort(int i, int j)
     {
       auto index = i * _n ;
-      std::cout << i << " " << j << " " << index << " " << _adj.size() << std::endl;
+      // std::cout << i << " " << j << " " << index << " " << _adj.size() << std::endl;
       assert( index < _adj.size());
       auto first = _adj.begin() + index ;
       auto last = _adj.begin() + index + j;
@@ -382,15 +385,11 @@ private:
   }
 
   ///
-  /// @brief Initialize a the orbit atrix
+  /// @brief Initialize a the orbit matrix
   ///
   auto resize_orbits(big_int n) const
   {
-    std::vector<std::vector<big_int>> orbits(n);
-    for (auto & it : orbits)
-    {
-      it.resize(73);
-    }
+    std::vector<std::vector<big_int>> orbits(n, std::vector<big_int>(73, 0));
     return orbits;
   }
 
@@ -723,7 +722,6 @@ public:
             auto xc = _inc.at(x).at(nx3).second;
 
             if (!_policy.are_adjacent(a, c) || !_policy.are_adjacent(b, c)) continue;
-
             _orbits.at(x).at(14)++;
             f_70 += common3_get(key_triple(a, b, c)) - 1;
 
@@ -759,6 +757,7 @@ public:
             if (!_policy.are_adjacent(a, c) || _policy.are_adjacent(b, c)) continue;
 
             _orbits.at(x).at(13)++;
+
             f_69 += (_triangles.at(xb) > 1 && _triangles.at(xc) > 1) ? (common3_get(key_triple(x, b, c)) - 1) : 0;
             f_68 += common3_get(key_triple(a, b, c)) - 1;
             f_64 += common2_get(key_pair(b, c)) - 2;
@@ -948,6 +947,7 @@ public:
             int c = _inc.at(a).at(na2).first;
             if (c == x || _policy.are_adjacent(x, c) || _policy.are_adjacent(b, c)) continue;
             _orbits.at(x).at(6)++;
+            std::cout << f_22 << " " << a << " " << _deg.at(a) << std::endl;
             f_22 += _deg.at(a) - 3;
             f_20 += _deg.at(x) - 1;
             f_19 += _deg.at(b) - 1 + _deg.at(c) - 1;
@@ -972,6 +972,7 @@ public:
 
       // read and write data accumulated by the algorithm
       auto& orbit = this->_orbits;
+
       // solve equations
       orbit[x][72] = _C5[x];
       orbit[x][71] = (f_71 - 12 * orbit[x][72]) / 2;
@@ -1056,7 +1057,11 @@ public:
           buffer += " ";
         }
         auto orbit_value = this->_orbits[i][j];
+        //std::cout << "Bug " << _orbits.at(1).at(22) << std::endl;
+        //std::cout << "Bug " << _orbits.at(2).at(22) << std::endl;
+
         assert(orbit_value >= 0);
+        if(orbit_value > 100) std::cout << "HERE 2 " << i << " " << j << std::endl;
         buffer += std::to_string(orbit_value);
       }
       buffer += "\n";
@@ -1158,12 +1163,13 @@ public:
   void parse(const std::string &input_file)
   {
     std::ifstream myfile (input_file);
+    if(myfile.fail())
+    {
+      throw std::invalid_argument("Invalid input file name.");
+    }
     if (myfile.is_open())
     {
       read_graph_properties_from(myfile);
-
-      std::cout << "Number of nodes:" << this->_n << std::endl;
-      std::cout << "Number of edges:" << this->_m << std::endl;
 
       this->_edges.resize(this->_m, key_pair(0,0));
       this->_deg.resize(this->_n);
@@ -1171,8 +1177,6 @@ public:
       populate_data_from(myfile);
       compute_maximum_degree();
       check_duplicated_undirected_edges(this->_m, this->_edges);
-
-      std::cout << "Max degree:" << this->_dmax << std::endl;
 
       myfile.close();
 
